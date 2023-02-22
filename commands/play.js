@@ -6,6 +6,7 @@ const ytdl = require("ytdl-core");
 const youtubesearchapi = require("youtube-search-api");
 const { key } = require("../config.json");
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 async function download(song) {
     await new Promise((resolve) => { // wait
@@ -54,7 +55,7 @@ module.exports = {
                 title: result.items[0].title,
                 url: "https://www.youtube.com/watch?v=" +  result.items[0].id,
                 id: result.items[0].id,
-                file: "./downloads/" + result.items[0].title + '.mp3'
+                file: "./downloads/" + uuidv4() + '.mp3'
             }
          });
         await download(song);

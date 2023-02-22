@@ -10,6 +10,7 @@
     "google-auth-library": "^8.7.0",
     "googleapis": "^111.0.0",
     "sodium-native": "^4.0.1",
+    "uuid": "^9.0.0",
     "youtube-search": "^1.1.6",
     "youtube-search-api": "^1.1.1",
     "youtube-search-without-api-key": "^1.1.0",
