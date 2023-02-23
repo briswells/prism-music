@@ -27,7 +27,7 @@ module.exports = {
 		} catch (error) {
 			return await interaction.followUp(`Bot isn't connected`);
 		}
-		if( serverQueue.songs.length == 0 ) {
+		if( serverQueue.songs.length == 0 ) {//theres a bug here it doesn't dc and sorta breaks everything
 			return await interaction.followUp(`No songs in queue to skip`);
 		}
 		play.song_shift(serverQueue);

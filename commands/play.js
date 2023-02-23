@@ -41,7 +41,7 @@ module.exports = {
              content: 'You need to be in a voice channel to play music!', 
              ephemeral: true }
         );
-        const songString = interaction.options.getString('song')
+        const songString = interaction.options.getString('song');
         const serverQueue = main.queue.get(interaction.guildId);
         if (!main.bitPermissions.has(PermissionsBitField.Flags.Speak) || !main.bitPermissions.has(PermissionsBitField.Flags.Connect)) {
             return await  interaction.followUp({
@@ -58,7 +58,7 @@ module.exports = {
                 file: "./downloads/" + uuidv4() + '.mp3'
             }
          });
-        await download(song);
+        
         if (!serverQueue) {
         const voiceChannel = interaction.member?.voice.channel;
         const serverQueue = {
@@ -73,6 +73,7 @@ module.exports = {
         main.queue.set(interaction.guildId, serverQueue);
         console.log("queue set")
         serverQueue.songs.push(song);
+        await download(song);
         if (!voiceChannel) {
           return interaction.followUp('Please join a voice channel to use this command.');
         }
@@ -92,7 +93,9 @@ module.exports = {
         });
         this.play(serverQueue);
         this.player.on(AudioPlayerStatus.Idle, () => {
-          this.song_shift(serverQueue);
+          this.song_shift(serverQueue, 0);
+          console.log("shifted song")
+          console.log(serverQueue.songs[0])
           if (serverQueue.songs.length == 0) {
             main.queue.delete(interaction.guildId);
             connection.destroy();
@@ -112,6 +115,7 @@ module.exports = {
         } else {
         serverQueue.songs.push(song);
         await interaction.followUp(`Adding ${song.title} to queue!`);
+        await download(song);
         }
 	},
   play : async function play(serverQueue) {
@@ -121,8 +125,9 @@ module.exports = {
         });
         this.player.play(audioResource);
   },
-  song_shift : function(serverQueue) {
-    fs.unlink(serverQueue.songs[0].file, (err) => {
+  song_shift : function(serverQueue, index) {
+    index = index || 0;
+    fs.unlink(serverQueue.songs[index].file, (err) => {
         if (err) {
             throw err;
         }
